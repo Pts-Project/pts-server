@@ -6,10 +6,10 @@ const mongoose = require('mongoose')
 const User = mongoose.model("User")
 const crypto = require('crypto')
 //Used for security purpose
-const bcrypt = require('bcrypt') //used to hash password
+const bcrypt = require('bcryptjs') //used to hash password
 const jwt = require('jsonwebtoken') //library to create jwt token
 const { JWTSECRET, SENDGRID_API, EMAIL } = require('../keys') //gives a unique token to every entry
-const {userValidator,userValidator1 ,userValidationResult} =require('../validators/userValidators')
+const { userValidator, userValidator1, userValidationResult } = require('../validators/userValidators')
 
 
 //Used for sending emails
@@ -41,11 +41,11 @@ router.get('/allUsers', (req, res) => {
 
 
 //SIGNUP ROUTE START
-router.post('/signup',userValidator ,userValidationResult, (req, res) => {
+router.post('/signup', userValidator, userValidationResult, (req, res) => {
     const { name, email, password, mobile } = req.body //take user details from frontend
-  /*  if (!email || !name || !password || !mobile) { //if these fields are not present ,it sends a error with a status code of 422
-        return res.status(422).json({ error: "please add all the fields" })
-    }*/
+    /*  if (!email || !name || !password || !mobile) { //if these fields are not present ,it sends a error with a status code of 422
+          return res.status(422).json({ error: "please add all the fields" })
+      }*/
     User.findOne({ email: email }) //find user with the help of email
         .then((savedUser) => {
             if (savedUser) {
@@ -82,7 +82,7 @@ router.post('/signup',userValidator ,userValidationResult, (req, res) => {
 //SIGNUP ROUTE END 
 
 //SIGNIN ROUTE START
-router.post('/login',(req, res) => {
+router.post('/login', (req, res) => {
     const { email, password } = req.body
     if (!email || !password) {
         return res.status(422).json({ error: "please add email or password" })
@@ -97,7 +97,7 @@ router.post('/login',(req, res) => {
                     if (doMatch) {
                         //res.json({message:"Successfully signed in"})
                         const token = jwt.sign({ _id: savedUser._id }, JWTSECRET)//it returns a unique token for every user and convert the details into a token
-                        res.status(200). json({ token })
+                        res.status(200).json({ token })
                     } else {
                         res.status(422).json({ error: "Invalid email or password" })
                     }
@@ -144,9 +144,9 @@ router.post('/changePassword', (req, res) => {
 //PASSWORD RESET ROUTE ENDS
 
 //NEW PASSWORD ROUTE STARTS
-router.post('/new-password',userValidator1,userValidationResult, (req, res) => {
+router.post('/new-password', userValidator1, userValidationResult, (req, res) => {
     const newPassword = req.body.password
-  
+
     const sentToken = req.body.token
     User.findOne({ resetToken: sentToken, expireToken: { $gt: Date.now() } })
         .then(user => {
