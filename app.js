@@ -45,9 +45,6 @@ mongoose.connection.on('connected', () => {
 mongoose.connection.on('error', (err) => {
     console.log("error connecting")
 })
-app, get('/', (req, res) => {
-    res.send("Hello")
-})
 app.listen(process.env.PORT || 5000, () => {
     console.log("server is running succesfully")
 })
