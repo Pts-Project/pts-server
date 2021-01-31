@@ -1,6 +1,5 @@
 const express = require('express')
 const router = express.Router() //used to create APIs
-
 //to save user details to mongo db
 const mongoose = require('mongoose')
 const User = mongoose.model("User")
