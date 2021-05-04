@@ -221,13 +221,13 @@ router.post('/event/create',  (req, res) => {
           })
 
 })
-router.get('/events', requiredlogin, (req, res) => {
+router.get('/events', (req, res) => {
      Event.find().then(list => {
           res.json({ list })
      })
 
 })
-router.get('/events/:id', requiredlogin, (req, res) => {
+router.get('/events/:id',  (req, res) => {
      indexnumber = req.params.id
      Event.findOne({ indexnumber: indexnumber }).then(detail => {
           if (!detail) {
@@ -237,9 +237,9 @@ router.get('/events/:id', requiredlogin, (req, res) => {
 
      })
 })
-router.delete('/delete/events', requiredlogin, (req, res) => {
+router.delete('/delete/events',  (req, res) => {
      const name = req.body.name
-     Product.findOne({ name: name }).then(deleteproduct => {
+     Event.findOne({ name: name }).then(deleteproduct => {
           if (deleteproduct) {
                deleteproduct.deleteOne()
                return res.json(({ message: "deleted" }))
@@ -249,4 +249,23 @@ router.delete('/delete/events', requiredlogin, (req, res) => {
           }
      })
 })
+
+router.delete('/deleteEvent/:eventId', (req, res) => {
+     Event.findOne({ _id: req.params.eventId })
+         .populate("postedBy", "_id")
+         .exec((err, event) => {
+             if (err || !event) {
+                 return res.status(422).json({ error: err })
+             }
+ 
+             event.remove()
+                 .then(result => {
+                     res.json({ message: "successfully deleted" })
+                 }).catch(err => {
+                     console.log(err)
+                 })
+ 
+         })
+ })
+
 module.exports = router
