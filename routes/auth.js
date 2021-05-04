@@ -237,7 +237,7 @@ router.get('/events/:id',  (req, res) => {
 
      })
 })
-router.delete('/delete/events',  (req, res) => {
+/*router.delete('/delete/events',  (req, res) => {
      const name = req.body.name
      Event.findOne({ name: name }).then(deleteproduct => {
           if (deleteproduct) {
@@ -248,7 +248,7 @@ router.delete('/delete/events',  (req, res) => {
                return res.status(422).json({ error: "event doesnt exist" })
           }
      })
-})
+})*/
 
 router.delete('/deleteEvent/:eventId', (req, res) => {
      Event.findOne({ _id: req.params.eventId })
