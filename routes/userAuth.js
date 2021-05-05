@@ -114,10 +114,10 @@ router.post('/user/login',userValidator1,userValidationResult,(req, res) => {
                           //   { expiresIn: "1d" }
                           // );
                           const token = generateJwtToken(savedUser._id, savedUser.role);
-                          const { _id, name, email, role } = savedUser;
+                          const { _id, name, email,mobile, role } = savedUser;
                           res.status(200).json({
                             token,
-                            user: { _id, name, email, role },
+                            user: { _id, name, email,mobile, role },
                           });
                         
                     } else {
@@ -301,6 +301,40 @@ router.delete('/deleteUser/:userId', (req, res) => {
         })
 })
 //DELETE USER ROUTE END
+
+//UPDATE PROFILE STARTS
+router.put('/updateProfile/:userId',async (req, res) => { 
+   
+    const salt=await bcrypt.genSalt(10)
+
+  const hashedpassword=await bcrypt.hash(req.body.password,salt)
+ req.body.password=hashedpassword;
+
+    User.findByIdAndUpdate({_id: req.params.userId},req.body,{ useFindAndModify: false })
+    .then(data => {
+        
+        if (!data) {
+          res.status(404).send({
+            message: `Update Unsuccessful`
+          });
+        } else {
+            // const token = generateJwtToken(savedUser._id, savedUser.role);
+            // const { _id, name, email,mobile, role } = savedUser;
+            // res.status(200).json({
+            //   token,
+            //   user: { _id, name, email,mobile, role },
+            // });
+            res.status(200).send({email:req.body.email,name:req.body.name,mobile:req.body.mobile,id:req.params.userId,role:data.role})
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Error in updating" 
+        });
+      }); 
+})
+//UPDATE PROFILE ENDS
+
 
 module.exports = router
 
