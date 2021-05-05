@@ -317,7 +317,15 @@ router.put('/updateProfile/:userId',async (req, res) => {
           res.status(404).send({
             message: `Update Unsuccessful`
           });
-        } else res.send({ message: "Updated Successfully" });
+        } else {
+            // const token = generateJwtToken(savedUser._id, savedUser.role);
+            // const { _id, name, email,mobile, role } = savedUser;
+            // res.status(200).json({
+            //   token,
+            //   user: { _id, name, email,mobile, role },
+            // });
+            res.status(200).send({email:req.body.email,name:req.body.name,mobile:req.body.mobile,id:req.params.userId,role:data.role})
+        }
       })
       .catch(err => {
         res.status(500).send({
