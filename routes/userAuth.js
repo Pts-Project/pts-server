@@ -324,8 +324,8 @@ router.put('/updateProfile/:userId',async (req, res) => {
             //   token,
             //   user: { _id, name, email,mobile, role },
             // });
-            res.status(200).send({email:req.body.email,name:req.body.name,mobile:req.body.mobile,id:req.params.userId,role:data.role})
-        }
+            res.status(200).send({email:req.body.email,name:req.body.name,mobile:req.body.mobile,_id:req.params.userId,role:data.role})
+        }   
       })
       .catch(err => {
         res.status(500).send({
