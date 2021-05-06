@@ -45,7 +45,7 @@ router.get('/allUsers', (req, res) => {
 
 //SIGNUP ROUTE START
 router.post('/user/signup',userValidator1,userValidationResult, (req, res) => {
-    const { name, email, password,mobile } = req.body //take user details from frontend
+    const { name, email, password,mobile ,image} = req.body //take user details from frontend
   /*  if (!email || !name || !password || !mobile) { //if these fields are not present ,it sends a error with a status code of 422
         return res.status(422).json({ error: "please add all the fields" })
     }*/
@@ -60,7 +60,8 @@ router.post('/user/signup',userValidator1,userValidationResult, (req, res) => {
                         email,
                         name,
                         password: hashedpassword,
-                        mobile
+                        mobile,
+                        image
                     })
                     user.save()
                         .then(user => {
