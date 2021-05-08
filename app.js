@@ -10,7 +10,7 @@ require('./models/events')
 require('./models/userModel')
 
 
-
+require('./models/project')
 
 
 
