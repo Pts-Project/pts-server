@@ -10,7 +10,7 @@ const bcrypt = require('bcrypt') //used to hash password
 const jwt = require('jsonwebtoken') //library to create jwt token
 const { JWTSECRET, SENDGRID_API, EMAIL } = require('../keys') //gives a unique token to every entry
 const {userValidator,userValidator1 ,userValidationResult} =require('../validators/userValidators')
-
+const projectschema=mongoose.model("Project")
 
 //Used for sending emails
 const nodemailer = require('nodemailer')
@@ -45,7 +45,7 @@ router.get('/allUsers', (req, res) => {
 
 //SIGNUP ROUTE START
 router.post('/user/signup',userValidator1,userValidationResult, (req, res) => {
-    const { name, email, password,mobile } = req.body //take user details from frontend
+    const { name, email, password,mobile ,image} = req.body //take user details from frontend
   /*  if (!email || !name || !password || !mobile) { //if these fields are not present ,it sends a error with a status code of 422
         return res.status(422).json({ error: "please add all the fields" })
     }*/
@@ -60,7 +60,8 @@ router.post('/user/signup',userValidator1,userValidationResult, (req, res) => {
                         email,
                         name,
                         password: hashedpassword,
-                        mobile
+                        mobile,
+                        image
                     })
                     user.save()
                         .then(user => {
@@ -114,10 +115,10 @@ router.post('/user/login',userValidator1,userValidationResult,(req, res) => {
                           //   { expiresIn: "1d" }
                           // );
                           const token = generateJwtToken(savedUser._id, savedUser.role);
-                          const { _id, name, email,mobile, role } = savedUser;
+                          const { _id, name, email,mobile, role ,image} = savedUser;
                           res.status(200).json({
                             token,
-                            user: { _id, name, email,mobile, role },
+                            user: { _id, name, email,mobile, role,image },
                           });
                         
                     } else {
@@ -207,10 +208,10 @@ router.post('/admin/login',userValidator1,userValidationResult,(req, res) => {
                           //   { expiresIn: "1d" }
                           // );
                           const token = generateJwtToken(savedUser._id, savedUser.role);
-                          const { _id, name, email, role } = savedUser;
+                          const { _id, name, email, role ,image} = savedUser;
                           res.status(200).json({
                             token,
-                            user: { _id, name, email, role },
+                            user: { _id, name, email, role,image },
                           });
                         
                     } else {
@@ -324,8 +325,8 @@ router.put('/updateProfile/:userId',async (req, res) => {
             //   token,
             //   user: { _id, name, email,mobile, role },
             // });
-            res.status(200).send({email:req.body.email,name:req.body.name,mobile:req.body.mobile,id:req.params.userId,role:data.role})
-        }
+            res.status(200).send({email:req.body.email,name:req.body.name,mobile:req.body.mobile,_id:req.params.userId,role:data.role,image:req.body.image})
+        }   
       })
       .catch(err => {
         res.status(500).send({
@@ -334,6 +335,45 @@ router.put('/updateProfile/:userId',async (req, res) => {
       }); 
 })
 //UPDATE PROFILE ENDS
+
+
+
+router.post('/user/addproject',async(request,response,next)=>{
+    
+    const project=new projectschema({
+        name:request.body.name,
+        description:request.body.description,
+        link:request.body.link,
+        email:request.body.email
+
+     
+    })
+    project.save()
+    .then(data=>{
+        response.json(data)
+
+    })
+    .catch(error=>{
+        response.json(error)
+    })
+});
+
+
+//GET ALL USERS ROUTE START
+router.get('/allprojects', (req, res) => {
+    projectschema.find()
+        .then(users => {
+            res.json({ users })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+})
+//GET ALL USERS ROUTE END
+
+
+
+
 
 
 module.exports = router

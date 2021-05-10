@@ -194,18 +194,13 @@ router.delete('/delete/user/:email', requiredlogin, (req, res) => {
      })
 })
 router.post('/event/create',  (req, res) => {
-     const { indexnumber, name, image } = req.body
+     const { indexnumber, name, image ,formurl} = req.body
      if (!name ||  !image) {
           return res.status(422).json({ error: "please add all the fields" })
-     }
-     Event.findOne({ name: name })
-          .then(savedUser => {
-               if (savedUser) {
-                    return res.status(422).json({ error: "event already exist with that name" })
-               }
-               else { 
+     }else{
+ 
                     const product = new Event({
-                         indexnumber: y + 1, name, image
+                         indexnumber: y + 1, name, image,formurl
 
                     })
                     product.save()
@@ -216,9 +211,9 @@ router.post('/event/create',  (req, res) => {
                          .catch(err => {
                               console.log(err)
                          })
-               }
-
-          })
+               
+          }
+          
 
 })
 router.get('/events', (req, res) => {

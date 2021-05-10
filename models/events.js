@@ -9,22 +9,21 @@ const  eventschema= new mongoose.Schema({
 
 
 
-
+formurl:{
+    type:String,
+    required:true,
+},
 
 
     name:{
         type:String,
         required:true
     },
-    category:
-    {
-         type:String,
-         required:true
-    },
+ 
     date:
     {
         type:String,
-        required:true
+        required:false
     },
      image:
     {
