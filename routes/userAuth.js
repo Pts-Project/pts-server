@@ -5,6 +5,7 @@ const router = express.Router() //used to create APIs
 const mongoose = require('mongoose')
 const User = mongoose.model("User")
 const crypto = require('crypto')
+const Event=mongoose.model("Event")
 //Used for security purpose
 const bcrypt = require('bcrypt') //used to hash password
 const jwt = require('jsonwebtoken') //library to create jwt token
@@ -41,6 +42,21 @@ router.get('/allUsers', (req, res) => {
 })
 //GET ALL USERS ROUTE END
 
+router.post('/addevent',  (req, res) => {
+    const { name, formurl, image} = req.body
+    const product = new Event({
+         name, image,formurl
+
+   })
+   product.save()
+        .then(user => {
+            res.json({ message: "saved succesfully" })
+           
+        })
+        .catch(err => {
+            console.log(err)
+        })
+})
 
 
 //SIGNUP ROUTE START
@@ -399,7 +415,6 @@ router.delete('/deleteEvent/:eventId', (req, res) => {
 
         })
 })
-
 
 
 
