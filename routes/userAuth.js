@@ -371,7 +371,34 @@ router.get('/allprojects', (req, res) => {
 })
 //GET ALL USERS ROUTE END
 
+router.get('/allevents', (req, res) => {
+    projectschema.find()
+        .then(users => {
+            res.json({ users })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+})
 
+
+router.delete('/deleteEvent/:eventId', (req, res) => {
+    User.findOne({ _id: req.params.eventId })
+        .populate("postedBy", "_id")
+        .exec((err, user) => {
+            if (err || !user) {
+                return res.status(422).json({ error: err })
+            }
+
+            events.remove()
+                .then(result => {
+                    res.json({ message: "successfully deleted" })
+                }).catch(err => {
+                    console.log(err)
+                })
+
+        })
+})
 
 
 
